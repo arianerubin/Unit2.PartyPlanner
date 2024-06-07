@@ -81,6 +81,8 @@ function renderParty() {
  * @param {Event} event
  */
 
+///////////////////////ADD PARTY///////////////////////////
+
 async function addParty(event) {
   event.preventDefault();
   console.log("Adding party...");
@@ -96,8 +98,6 @@ async function addParty(event) {
     description: document.getElementById("description").value,
     cohortId: 219,
   };
-
-  console.log("Formatted party data:", partyData);
 
   try {
     const response = await fetch(
@@ -117,12 +117,12 @@ async function addParty(event) {
         responseData.error ? responseData.error.message : "Failed to add party"
       );
     }
-
-    console.log("Party added successfully!");
   } catch (error) {
-    console.error("Error adding party:", error);
+    console.error("Error", error);
   }
 }
+
+/////////to delete party////////////////
 
 async function deleteParty(id) {
   try {
@@ -134,9 +134,8 @@ async function deleteParty(id) {
       throw new Error("Failed to delete party");
     }
 
-    console.log("Party deleted successfully!");
     render();
   } catch (error) {
-    console.error("Error deleting party:", error);
+    console.error("Error", error);
   }
 }
