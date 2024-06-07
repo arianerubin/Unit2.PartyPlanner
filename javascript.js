@@ -27,18 +27,16 @@ const partyList = document.querySelector("#party-list");
 const addPartyForm = document.querySelector("#addParty");
 addPartyForm.addEventListener("submit", addParty);
 
-/**
- * Sync state with the API and rerender
- */
+////////Sync state with the API and rerender//////////
+
 async function render() {
   await getParty();
   renderParty();
 }
 render();
 
-/**
- * Update state with parties from API
- */
+/////////Update state with parties from API///////////
+
 async function getParty() {
   try {
     const response = await fetch(API_URL);
@@ -49,9 +47,8 @@ async function getParty() {
   }
 }
 
-/**
- * Render parties from state
- */
+/////////////Render parties from state////////////////
+
 function renderParty() {
   if (!state.party.length) {
     partyList.innerHTML = "<li>No Parties to display</li>";
@@ -76,10 +73,7 @@ function renderParty() {
   partyList.replaceChildren(...partyCards);
 }
 
-/**
- * Ask the API to create a new party based on form data
- * @param {Event} event
- */
+///////Ask the API to create a new party based on form data///////////////
 
 ///////////////////////ADD PARTY///////////////////////////
 
@@ -100,14 +94,11 @@ async function addParty(event) {
   };
 
   try {
-    const response = await fetch(
-      "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2405-FTB-ET-WEB-FT/events",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(partyData),
-      }
-    );
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(partyData),
+    });
 
     const responseData = await response.json();
     console.log("Response data:", responseData);
@@ -117,6 +108,7 @@ async function addParty(event) {
         responseData.error ? responseData.error.message : "Failed to add party"
       );
     }
+    render();
   } catch (error) {
     console.error("Error", error);
   }
