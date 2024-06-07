@@ -17,11 +17,13 @@
 //
 
 const COHORT = "2405-FTB-ET-WEB-FT";
-const apiUrL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/2405-FTB-ET-WEB-FT/events`;
+const API_URL = `https://fsa-crud-2aa9294fe819.herokuapp.com/api/${COHORT}/events`;
 
-const party = [];
+const state = {
+  party: [],
+};
 
-const partyList = document.querySelector("#party");
+const partyList = document.querySelector("#party-list");
 const addPartyForm = document.querySelector("#addParty");
 addPartyForm.addEventListener("submit", addParty);
 
@@ -52,20 +54,23 @@ async function getParty() {
  */
 function renderParty() {
   if (!state.party.length) {
-    partyList.innerHTML = "<li>.</li>";
+    partyList.innerHTML = "<li>No Parties to display</li>";
     return;
   }
 
   const partyCards = state.party.map((party) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-        <h2>${party.name}</h2>
-        <p>${party.date}</p>
-        <p>${party.time}</p>
-        <p>${party.location}</p>
-        <p>${party.description}</p>
+    const card = document.createElement("div");
+    card.className = "card mb-3";
+    card.innerHTML = `
+          <h2>${party.name}</h2>
+          <p>${party.date}</p>
+          <p>${party.time}</p>
+          <p>${party.location}</p>
+          <p>${party.description}</p>
+          <button class="btn btn-danger" onclick="deleteParty('${party.id}')">Delete</button>
+        </div>
     `;
-    return li;
+    return card;
   });
 
   partyList.replaceChildren(...partyCards);
@@ -78,26 +83,60 @@ function renderParty() {
 
 async function addParty(event) {
   event.preventDefault();
+  console.log("Adding party...");
+
+  const partyData = {
+    name: document.getElementById("name").value,
+    date: new Date(
+      document.getElementById("date").value +
+        "T" +
+        document.getElementById("time").value
+    ).toISOString(),
+    location: document.getElementById("location").value,
+    description: document.getElementById("description").value,
+    cohortId: 219, // Assuming cohortId is required and fixed for this example
+  };
+
+  console.log("Formatted party data:", partyData);
 
   try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: addPartyForm.name.value,
-        date: addPartyForm.date.value,
-        time: addPartyForm.time.value,
-        location: addPartyForm.location.value,
-        description: addPartyForm.description.value,
-      }),
+    const response = await fetch(
+      "https://fsa-crud-2aa9294fe819.herokuapp.com/api/2405-FTB-ET-WEB-FT/events",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(partyData),
+      }
+    );
+
+    const responseData = await response.json();
+    console.log("Response data:", responseData);
+
+    if (!response.ok) {
+      throw new Error(
+        responseData.error ? responseData.error.message : "Failed to add party"
+      );
+    }
+
+    console.log("Party added successfully!");
+  } catch (error) {
+    console.error("Error adding party:", error);
+  }
+}
+
+async function deleteParty(id) {
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
     });
 
     if (!response.ok) {
-      throw new Error("Failed to add party");
+      throw new Error("Failed to delete party");
     }
 
+    console.log("Party deleted successfully!");
     render();
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting party:", error);
   }
 }
