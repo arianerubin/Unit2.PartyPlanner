@@ -94,7 +94,7 @@ async function addParty(event) {
     ).toISOString(),
     location: document.getElementById("location").value,
     description: document.getElementById("description").value,
-    cohortId: 219, // Assuming cohortId is required and fixed for this example
+    cohortId: 219,
   };
 
   console.log("Formatted party data:", partyData);
