@@ -1,0 +1,33 @@
+.container {
+  display: grid;
+  width: 100%;
+  font-family: verdana;
+}
+
+button {
+  width: 30%;
+  margin: auto;
+}
+
+h1 {
+  font-family: "Dancing Script", cursive;
+  font-size: 100px;
+  color: rgb(247, 119, 46);
+  font-weight: bold;
+  margin: auto;
+}
+
+.card {
+  margin: 5px;
+  padding: 30px;
+  border: 1px solid #ba6719;
+  border-radius: 10px;
+  box-shadow: 10px 10px 8px 0 rgb(98, 94, 94);
+  transition: 0.2s;
+}
+
+.mb-3 {
+  display: inline-flex;
+  width: 50%;
+  margin: 5px;
+}
